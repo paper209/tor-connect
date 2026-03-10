@@ -1,5 +1,7 @@
 package main
 
-func main() {
+import "server/server"
 
+func main() {
+	server.Listen()
 }

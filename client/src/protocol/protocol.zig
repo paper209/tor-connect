@@ -1,4 +1,6 @@
 const std = @import("std");
+pub const handshake = @import("handshake.zig");
+pub const keepalive = @import("keepalive.zig");
 
 pub const DataType = enum(u8) {
     handshake = 0,
@@ -19,11 +21,11 @@ pub const Data = struct {
     }
 
     pub fn encode(self: Data, alloc: std.mem.Allocator) ![]u8 {
-        const body_size: u8 = self.body.len;
+        const body_size: u8 = @intCast(self.body.len);
         const buf = try alloc.alloc(u8, body_size + 2);
 
         buf[0] = body_size; // body size (u8)
-        buf[1] = self.data_type; // data type (u8)
+        buf[1] = @intFromEnum(self.data_type); // data type (u8)
         std.mem.copyForwards(u8, buf[2..], self.body);
 
         return buf;
@@ -32,23 +34,5 @@ pub const Data = struct {
 
 pub fn isOk(buf: []const u8) bool {
     const data: Data = .decode(buf);
-    return std.mem.eql([]const u8, data.body, "ok");
-}
-
-pub fn buildHandshake(alloc: std.mem.Allocator) ![]u8 {
-    const data = Data{
-        .data_type = DataType.handshake,
-        .body = []const u8{},
-    };
-
-    return data.encode(alloc);
-}
-
-pub fn buildKeepAlive(alloc: std.mem.Allocator) ![]u8 {
-    const data = Data{
-        .data_type = DataType.keepalive,
-        .body = []const u8{},
-    };
-
-    return data.encode(alloc);
+    return std.mem.eql(u8, data.body, "ok");
 }

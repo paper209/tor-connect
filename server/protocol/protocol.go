@@ -49,8 +49,8 @@ func Decode(data []uint8) (*Data, error) {
 	}
 
 	return &Data{
-		DataType: dataType(data[1]),
-		Body:     string(data[2:]),
+		DataType: dataType(data[0]),
+		Body:     string(data[1:]),
 	}, nil
 }
 
