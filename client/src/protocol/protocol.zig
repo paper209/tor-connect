@@ -13,7 +13,8 @@ pub const Data = struct {
     data_type: DataType,
     body: []const u8,
 
-    pub fn decode(buf: []const u8) Data {
+    pub fn decode(buf: []const u8) !Data {
+        if (buf.len < 2) return error.InvalidData;
         return Data{
             .data_type = @enumFromInt(buf[1]),
             .body = buf[2 .. buf[0] + 2],
@@ -32,7 +33,7 @@ pub const Data = struct {
     }
 };
 
-pub fn isOk(buf: []const u8) bool {
-    const data: Data = .decode(buf);
+pub fn isOk(buf: []const u8) !bool {
+    const data: Data = try .decode(buf);
     return std.mem.eql(u8, data.body, "ok");
 }

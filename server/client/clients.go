@@ -24,6 +24,8 @@ func new(group string, conn net.Conn) string {
 	uuid := uuid.NewString()
 	groups[uuid] = conn
 
+	Clients[group] = groups
+
 	return uuid
 }
 

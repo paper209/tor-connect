@@ -24,7 +24,7 @@ type dataType uint8
 const (
 	typeHandshake dataType = 0
 	typeKeepAlive dataType = 1
-	//typeProxyList dataType = 2
+	typeProxyList dataType = 2
 )
 
 type Data struct {

@@ -1,7 +1,11 @@
 package main
 
-import "server/server"
+import (
+	"server/admin"
+	"server/client"
+)
 
 func main() {
-	server.Listen()
+	go client.Listen()
+	admin.Handler()
 }

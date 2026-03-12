@@ -14,7 +14,7 @@ func Handshake(data []uint8) (string, []byte, error) {
 		return "", nil, fmt.Errorf("invalid data type: %d", d.DataType)
 	}
 
-	group := string(d.Body[2:])
+	group := string(d.Body)
 	if group == "" {
 		group = "unknown"
 	}
