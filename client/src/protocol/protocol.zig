@@ -16,8 +16,8 @@ pub const Data = struct {
     pub fn decode(buf: []const u8) !Data {
         if (buf.len < 2) return error.InvalidData;
         return Data{
-            .data_type = @enumFromInt(buf[1]),
-            .body = buf[2 .. buf[0] + 2],
+            .data_type = @enumFromInt(buf[0]),
+            .body = buf[1..],
         };
     }
 
