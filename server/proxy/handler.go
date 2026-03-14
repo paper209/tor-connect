@@ -17,7 +17,9 @@ func Handler(cfg *config.Config) {
 			continue
 		}
 
-		proxies = checkProxies(proxies)
+		if cfg.Client.Proxy.Checker {
+			proxies = checkProxies(proxies)
+		}
 		client.SendProxies(proxies)
 
 		time.Sleep(delay)
