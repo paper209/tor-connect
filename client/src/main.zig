@@ -2,15 +2,22 @@ const std = @import("std");
 const server = @import("server/server.zig");
 const proxy = @import("proxy/proxy.zig");
 
-pub fn main() !void {
-    try proxy.init();
+const allocator = std.heap.page_allocator;
 
-    const address = try std.net.Address.parseIp("127.0.0.1", 8080);
+pub fn main() !void {
+    const args = try std.process.argsAlloc(allocator);
+    defer std.process.argsFree(allocator, args);
+
+    const group = args[1];
+    try proxy.init(args[2..]);
+
     while (true) {
-        server.connect(address) catch |err| {
-            std.debug.print("connect error: {}\n", .{err});
-            std.Thread.sleep(10 * std.time.ns_per_s);
-            continue;
-        };
+        for (proxy.tor_proxies.items) |p| {
+            server.connect(group, p) catch |err| {
+                std.debug.print("connect error: {}\n", .{err});
+                std.Thread.sleep(10 * std.time.ns_per_s);
+                continue;
+            };
+        }
     }
 }

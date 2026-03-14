@@ -20,10 +20,10 @@ pub fn sendKeepalive(stream: std.net.Stream) !void {
     try stream.writeAll(keepalive);
 }
 
-pub fn handler(stream: std.net.Stream) !void {
+pub fn handler(stream: std.net.Stream, group: []const u8) !void {
     // handshake loop
     while (true) {
-        if (try sendHandshake(stream, "test")) {
+        if (try sendHandshake(stream, group)) {
             break;
         }
 

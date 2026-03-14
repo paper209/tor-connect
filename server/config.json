@@ -1,6 +1,6 @@
 {
     "client": {
-        "listen_addr": "127.0.0.1:8080",
+        "listen_addr": "127.0.0.1:2222",
         "proxy": {
             "proxies_path": "proxies.txt",
             "sender_delay": 10,
