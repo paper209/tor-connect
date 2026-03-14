@@ -14,8 +14,7 @@ func Handler(cfg *config.Config) {
 		if err != nil {
 			log.Println(err.Error())
 			time.Sleep(60 * time.Second)
-
-			return
+			continue
 		}
 
 		proxies = checkProxies(proxies)
