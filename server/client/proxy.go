@@ -5,11 +5,12 @@ import (
 	"server/protocol"
 )
 
-func SendProxyList() {
+func SendProxies(proxies []string) {
+	payload := protocol.BuildProxyList(proxies)
 	for _, group := range Clients {
 		for uuid, conn := range group {
-			fmt.Println(uuid)
-			conn.Write(protocol.BuildProxyList())
+			fmt.Println(uuid) // debug
+			conn.Write(payload)
 		}
 	}
 }

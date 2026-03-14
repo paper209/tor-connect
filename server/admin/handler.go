@@ -20,8 +20,15 @@ func Handler() {
 				fmt.Printf("%s: %d\n", name, len(groups))
 			}
 			client.ClientsMu.Unlock()
-		case "testsend":
-			client.SendProxyList()
+		case "print":
+			if len(inputs) < 3 {
+				fmt.Println("print [group/client] [name/id]")
+				continue
+			}
+
+			if inputs[1] == "group" {
+
+			}
 		}
 	}
 }

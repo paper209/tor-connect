@@ -5,8 +5,8 @@ import (
 	"net"
 )
 
-func Listen() error {
-	ln, err := net.Listen("tcp", "127.0.0.1:8080")
+func Listen(addr string) error {
+	ln, err := net.Listen("tcp", addr)
 	if err != nil {
 		return err
 	}

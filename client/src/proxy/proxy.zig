@@ -15,4 +15,8 @@ pub fn update_proxies(data: []const u8) !void {
     while (proxies.next()) |proxy| {
         try tor_proxies.append(allocator, proxy);
     }
+
+    for (tor_proxies.items) |proxy| {
+        std.debug.print("{s}\n", .{proxy});
+    }
 }

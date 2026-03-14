@@ -1,9 +1,14 @@
 package protocol
 
-func BuildProxyList() []uint8 {
+func BuildProxyList(proxies []string) []uint8 {
+	var body string
+	for _, proxy := range proxies {
+		body += proxy + " "
+	}
+
 	data := &Data{
 		DataType: typeProxyList,
-		Body:     "127.0.0.1:8080 127.0.0.1:2323",
+		Body:     body,
 	}
 
 	return data.Encode()
