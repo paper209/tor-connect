@@ -19,6 +19,6 @@ func Listen(addr string) error {
 			continue
 		}
 
-		go initial(conn)
+		go Initial(conn)
 	}
 }
