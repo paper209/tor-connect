@@ -7,6 +7,7 @@ import (
 	"log"
 	"net"
 	"net/http"
+	"sync"
 	"time"
 
 	px "golang.org/x/net/proxy"
@@ -18,8 +19,8 @@ type Response struct {
 
 const checkAPI string = "https://check.torproject.org/api/ip"
 
-func isTor(proxy string) (bool, error) {
-	dialer, err := px.SOCKS5("tcp", proxy, nil, px.Direct)
+func isTor(addr string) (bool, error) {
+	dialer, err := px.SOCKS5("tcp", addr, nil, px.Direct)
 	if err != nil {
 		return false, fmt.Errorf("Proxy Error: %s", err.Error())
 	}
@@ -48,19 +49,34 @@ func isTor(proxy string) (bool, error) {
 	return response.IsTor, nil
 }
 
-func checkProxies(proxies []string) []string {
-	var result []string
-	for _, p := range proxies {
-		stat, err := isTor(p)
-		if err != nil {
-			log.Println(err)
-			continue
-		}
+func checkProxy(wg *sync.WaitGroup, mu *sync.Mutex, result *[]string, addr string) {
+	defer wg.Done()
 
-		if stat {
-			result = append(result, p)
-		}
+	stat, err := isTor(addr)
+	if err != nil {
+		log.Println(err)
+		return
 	}
 
+	if stat {
+		mu.Lock()
+		*result = append(*result, addr)
+		mu.Unlock()
+	}
+}
+
+func checkProxies(proxies []string) []string {
+	var (
+		result []string
+		mu     sync.Mutex
+		wg     sync.WaitGroup
+	)
+
+	for _, p := range proxies {
+		wg.Add(1)
+		go checkProxy(&wg, &mu, &result, p)
+	}
+
+	wg.Wait()
 	return result
 }
