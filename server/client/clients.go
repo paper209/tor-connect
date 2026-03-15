@@ -7,26 +7,34 @@ import (
 	"github.com/google/uuid"
 )
 
+type Client struct {
+	Conn net.Conn
+	Mu   sync.Mutex
+}
+
 var (
-	Clients   = make(map[string]map[string]net.Conn) // map[group]map[uuid]conn
+	Clients   = make(map[string]map[string]*Client) // map[group]map[uuid]conn
 	ClientsMu = sync.Mutex{}
 )
 
-func new(group string, conn net.Conn) string {
+func new(group string, conn net.Conn) (string, *Client) {
 	ClientsMu.Lock()
 	defer ClientsMu.Unlock()
 
 	groups := Clients[group]
 	if groups == nil {
-		groups = make(map[string]net.Conn)
+		groups = make(map[string]*Client)
 	}
 
 	uuid := uuid.NewString()
-	groups[uuid] = conn
+	groups[uuid] = &Client{
+		Conn: conn,
+		Mu:   sync.Mutex{},
+	}
 
 	Clients[group] = groups
 
-	return uuid
+	return uuid, groups[uuid]
 }
 
 func remove(group, uuid string) {
@@ -38,11 +46,11 @@ func remove(group, uuid string) {
 		return
 	}
 
-	conn := groups[uuid]
-	if conn == nil {
+	c := groups[uuid]
+	if c == nil {
 		return
 	}
-	conn.Close()
+	c.Conn.Close()
 
 	delete(groups, uuid)
 
