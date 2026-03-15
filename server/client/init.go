@@ -6,7 +6,7 @@ import (
 	"server/protocol"
 )
 
-func initial(conn net.Conn) {
+func Initial(conn net.Conn) {
 	data, err := protocol.Read(conn)
 	if err != nil {
 		conn.Close()
@@ -31,6 +31,6 @@ func initial(conn net.Conn) {
 		return
 	}
 
-	uuid := new(group, conn)
-	go handler(group, uuid, conn)
+	uuid, c := new(group, conn)
+	go c.handler(group, uuid)
 }
