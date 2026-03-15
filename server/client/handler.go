@@ -2,14 +2,13 @@ package client
 
 import (
 	"log"
-	"net"
 	"server/protocol"
 )
 
-func handler(group, uuid string, conn net.Conn) {
+func (c *Client) handler(group, uuid string) {
 	defer remove(group, uuid)
 	for {
-		data, err := protocol.Read(conn)
+		data, err := protocol.Read(c.Conn)
 		if err != nil {
 			log.Printf("[client-error] read error: %s\n", err.Error())
 			return
@@ -21,7 +20,9 @@ func handler(group, uuid string, conn net.Conn) {
 			return
 		}
 
-		_, err = conn.Write(response)
+		c.Mu.Lock()
+		_, err = c.Conn.Write(response)
+		c.Mu.Unlock()
 		if err != nil {
 			log.Printf("[client-error] write error: %s\n", err.Error())
 			return
