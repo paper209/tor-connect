@@ -5,6 +5,9 @@ import (
 )
 
 func SendProxies(proxies []string) {
+	ClientsMu.Lock()
+	defer ClientsMu.Unlock()
+
 	payload := protocol.BuildProxyList(proxies)
 	for _, group := range Clients {
 		for _, c := range group {
