@@ -8,6 +8,11 @@ pub fn main() !void {
     const args = try std.process.argsAlloc(allocator);
     defer std.process.argsFree(allocator, args);
 
+    if (args.len < 3) {
+        std.debug.print("{s} [group_name] [proxy1] [proxy2]...\n", .{args[0]});
+        return;
+    }
+
     const group = args[1];
     try proxy.init(args[2..]);
 
