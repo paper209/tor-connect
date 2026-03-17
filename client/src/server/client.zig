@@ -22,13 +22,8 @@ pub fn sendKeepalive(stream: std.net.Stream) !void {
 
 pub fn handler(stream: std.net.Stream, group: []const u8) !void {
     // handshake loop
-    while (true) {
-        if (try sendHandshake(stream, group)) {
-            break;
-        }
-
-        std.Thread.sleep(5 * std.time.ns_per_s);
-    }
+    const stat = try sendHandshake(stream, group);
+    if (!stat) return error.HandshakeError;
 
     // keepalive loop
     while (true) {
