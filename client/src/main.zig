@@ -2,6 +2,7 @@ const std = @import("std");
 const server = @import("server/server.zig");
 const proxy = @import("proxy/proxy.zig");
 
+const rand = std.crypto.random;
 const allocator = std.heap.page_allocator;
 
 pub fn main() !void {
@@ -17,12 +18,13 @@ pub fn main() !void {
     try proxy.init(args[2..]);
 
     while (true) {
-        for (proxy.tor_proxies.items) |p| {
-            server.connect(group, p) catch |err| {
-                std.debug.print("connect error: {}\n", .{err});
-                std.Thread.sleep(10 * std.time.ns_per_s);
-                continue;
-            };
-        }
+        const n = rand.uintLessThan(usize, proxy.tor_proxies.items.len);
+        const p = proxy.tor_proxies.items[n];
+
+        server.connect(group, p) catch |err| {
+            std.debug.print("connect error: {}\n", .{err});
+            std.Thread.sleep(10 * std.time.ns_per_s);
+            continue;
+        };
     }
 }
