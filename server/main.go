@@ -1,17 +1,17 @@
 package main
 
 import (
-	"log"
 	"server/admin"
 	"server/client"
 	"server/config"
+	"server/logger"
 	"server/proxy"
 )
 
 func main() {
 	cfg, err := config.Read()
 	if err != nil {
-		log.Println(err.Error())
+		logger.NewError(err)
 		return
 	}
 

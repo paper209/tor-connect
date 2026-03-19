@@ -7,6 +7,7 @@ import (
 	"log"
 	"net"
 	"net/http"
+	"server/logger"
 	"sync"
 	"time"
 
@@ -22,7 +23,7 @@ const checkAPI string = "https://check.torproject.org/api/ip"
 func isTor(addr string) (bool, error) {
 	dialer, err := px.SOCKS5("tcp", addr, nil, px.Direct)
 	if err != nil {
-		return false, fmt.Errorf("Proxy Error: %s", err.Error())
+		return false, fmt.Errorf("Proxy connect: %s", err.Error())
 	}
 
 	client := &http.Client{
@@ -36,14 +37,14 @@ func isTor(addr string) (bool, error) {
 
 	resp, err := client.Get(checkAPI)
 	if err != nil {
-		return false, fmt.Errorf("Check Proxy Error: %s", err.Error())
+		return false, fmt.Errorf("Proxy request: %s", err.Error())
 	}
 	defer resp.Body.Close()
 
 	var response Response
 	err = json.NewDecoder(resp.Body).Decode(&response)
 	if err != nil {
-		return false, fmt.Errorf("Check Proxy Error: %s", err.Error())
+		return false, fmt.Errorf("Proxy decode: %s", err.Error())
 	}
 
 	return response.IsTor, nil
@@ -66,6 +67,8 @@ func checkProxy(wg *sync.WaitGroup, mu *sync.Mutex, result *[]string, addr strin
 }
 
 func checkProxies(proxies []string) []string {
+	logger.NewINFO("Proxy check started")
+
 	var (
 		result []string
 		mu     sync.Mutex

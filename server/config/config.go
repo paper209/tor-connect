@@ -24,13 +24,13 @@ type Config struct {
 func Read() (*Config, error) {
 	data, err := os.ReadFile("config.json")
 	if err != nil {
-		return nil, fmt.Errorf("Config Error: %s", err.Error())
+		return nil, fmt.Errorf("Config: %s", err.Error())
 	}
 
 	var cfg Config
 	err = json.Unmarshal(data, &cfg)
 	if err != nil {
-		return nil, fmt.Errorf("Config Error: %s", err.Error())
+		return nil, fmt.Errorf("Config: %s", err.Error())
 	}
 
 	return &cfg, nil

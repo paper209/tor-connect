@@ -1,7 +1,8 @@
 package client
 
 import (
-	"log"
+	"fmt"
+	"server/logger"
 	"server/protocol"
 )
 
@@ -10,13 +11,13 @@ func (c *Client) handler(group, uuid string) {
 	for {
 		data, err := protocol.Read(c.Conn)
 		if err != nil {
-			log.Printf("[client-error] read error: %s\n", err.Error())
+			logger.NewError(fmt.Errorf("Client read: %s", err.Error()))
 			return
 		}
 
 		response, err := protocol.KeepAlive(data)
 		if err != nil {
-			log.Printf("[client-error] keepalive error: %s", err.Error())
+			logger.NewError(fmt.Errorf("Client keepalive: %s", err.Error()))
 			return
 		}
 
@@ -24,7 +25,7 @@ func (c *Client) handler(group, uuid string) {
 		_, err = c.Conn.Write(response)
 		c.Mu.Unlock()
 		if err != nil {
-			log.Printf("[client-error] write error: %s\n", err.Error())
+			logger.NewError(fmt.Errorf("Client write: %s", err.Error()))
 			return
 		}
 	}

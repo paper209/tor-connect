@@ -11,7 +11,7 @@ func KeepAlive(data []uint8) ([]byte, error) {
 
 	// check data type
 	if d.DataType != typeKeepAlive {
-		return nil, fmt.Errorf("invalid data type: %d", d.DataType)
+		return nil, fmt.Errorf("Invalid data type: %d", d.DataType)
 	}
 
 	return buildOK(typeKeepAlive), nil

@@ -1,9 +1,9 @@
 package proxy
 
 import (
-	"log"
 	"server/client"
 	"server/config"
+	"server/logger"
 	"time"
 )
 
@@ -12,7 +12,7 @@ func Handler(cfg *config.Config) {
 	for {
 		proxies, err := readProxies(cfg.Client.Proxy.PATH)
 		if err != nil {
-			log.Println(err.Error())
+			logger.NewError(err)
 			time.Sleep(60 * time.Second)
 			continue
 		}

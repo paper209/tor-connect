@@ -45,7 +45,7 @@ func (d *Data) Encode() []uint8 {
 // size is stripped before the data is passed
 func Decode(data []uint8) (*Data, error) {
 	if len(data) < 1 {
-		return nil, fmt.Errorf("data is too short: %d", len(data))
+		return nil, fmt.Errorf("Data is too short: %d", len(data))
 	}
 
 	return &Data{
