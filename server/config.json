@@ -1,4 +1,5 @@
 {
+    "log_path": "logs.json",
     "client": {
         "listen_addr": "127.0.0.1:2222",
         "proxy": {
