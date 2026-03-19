@@ -18,8 +18,11 @@ type Client struct {
 }
 
 type Config struct {
-	Client Client `json:"client"`
+	LogPATH string `json:"log_path"`
+	Client  Client `json:"client"`
 }
+
+var LogPATH string
 
 func Read() (*Config, error) {
 	data, err := os.ReadFile("config.json")
@@ -32,6 +35,8 @@ func Read() (*Config, error) {
 	if err != nil {
 		return nil, fmt.Errorf("Config: %s", err.Error())
 	}
+
+	LogPATH = cfg.LogPATH
 
 	return &cfg, nil
 }
