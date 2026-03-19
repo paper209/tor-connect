@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"os"
 	"server/config"
+	"sync"
 )
 
 type logType string
@@ -19,7 +20,12 @@ type Log struct {
 	Message string  `json:"message"`
 }
 
+var mu sync.Mutex
+
 func store(t logType, now, message string) {
+	mu.Lock()
+	defer mu.Unlock()
+
 	logs := make(map[string]Log)
 	data, err := os.ReadFile(config.LogPATH)
 	if err != nil {
