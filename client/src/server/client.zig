@@ -9,10 +9,10 @@ pub fn sendHandshake(stream: std.net.Stream, group: []const u8) !bool {
     const handshake = try protocol.handshake.build(group, allocator);
     try stream.writeAll(handshake);
 
-    var buf: [4]u8 = undefined;
+    var buf: [5]u8 = undefined;
     _ = try stream.read(&buf);
 
-    return protocol.isOk(buf[1..]);
+    return protocol.isOk(buf[2..]);
 }
 
 pub fn sendKeepalive(stream: std.net.Stream) !void {
@@ -29,10 +29,12 @@ pub fn handler(stream: std.net.Stream, group: []const u8) !void {
     while (true) {
         try sendKeepalive(stream);
 
-        var body_size: [1]u8 = undefined;
-        _ = try stream.read(&body_size);
+        var size_buf: [2]u8 = undefined;
+        _ = try stream.read(&size_buf);
 
-        const buf = try allocator.alloc(u8, body_size[0] + 1);
+        const body_size = std.mem.readInt(u16, size_buf[0..], .big);
+
+        const buf = try allocator.alloc(u8, body_size + 1);
         _ = try stream.read(buf);
 
         const data: protocol.Data = try .decode(buf);

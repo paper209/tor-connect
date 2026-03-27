@@ -13,12 +13,12 @@ func Listen(addr string) error {
 	}
 	defer ln.Close()
 
-	logger.NewINFO(fmt.Sprintf("Server is running on %s", addr))
+	logger.NewINFO(fmt.Sprintf("server is running on %s", addr))
 
 	for {
 		conn, err := ln.Accept()
 		if err != nil {
-			logger.NewError(fmt.Errorf("Server accept: %s", err.Error()))
+			logger.NewError(fmt.Errorf("server accept: %s", err.Error()))
 			continue
 		}
 

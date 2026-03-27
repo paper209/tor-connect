@@ -8,7 +8,7 @@ pub const DataType = enum(u8) {
     proxy_list = 2,
 };
 
-// my protocol: [body_size(u8)][type(u8)][body([]u8)]
+// my protocol: [body_size(u16)][type(u8)][body([]u8)]
 pub const Data = struct {
     data_type: DataType,
     body: []const u8,
@@ -22,12 +22,12 @@ pub const Data = struct {
     }
 
     pub fn encode(self: Data, alloc: std.mem.Allocator) ![]u8 {
-        const body_size: u8 = @intCast(self.body.len);
-        const buf = try alloc.alloc(u8, body_size + 2);
+        const body_size: u16 = @intCast(self.body.len);
+        const buf = try alloc.alloc(u8, body_size + 3);
 
-        buf[0] = body_size; // body size (u8)
-        buf[1] = @intFromEnum(self.data_type); // data type (u8)
-        std.mem.copyForwards(u8, buf[2..], self.body);
+        std.mem.writeInt(u16, buf[0..2], body_size, .big);
+        buf[2] = @intFromEnum(self.data_type); // data type (u8)
+        std.mem.copyForwards(u8, buf[3..], self.body);
 
         return buf;
     }

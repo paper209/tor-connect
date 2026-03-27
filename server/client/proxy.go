@@ -22,5 +22,5 @@ func SendProxies(proxies []string) {
 		}
 	}
 
-	logger.NewINFO(fmt.Sprintf("Proxy distribution completed: %d", count))
+	logger.NewINFO(fmt.Sprintf("proxy distribution completed: %d", count))
 }

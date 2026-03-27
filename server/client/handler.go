@@ -11,13 +11,13 @@ func (c *Client) handler(group, uuid string) {
 	for {
 		data, err := protocol.Read(c.Conn)
 		if err != nil {
-			logger.NewError(fmt.Errorf("Client read: %s", err.Error()))
+			logger.NewError(fmt.Errorf("client read error: %s", err.Error()))
 			return
 		}
 
 		response, err := protocol.KeepAlive(data)
 		if err != nil {
-			logger.NewError(fmt.Errorf("Client keepalive: %s", err.Error()))
+			logger.NewError(fmt.Errorf("client keepalive error: %s", err.Error()))
 			return
 		}
 
@@ -25,7 +25,7 @@ func (c *Client) handler(group, uuid string) {
 		_, err = c.Conn.Write(response)
 		c.Mu.Unlock()
 		if err != nil {
-			logger.NewError(fmt.Errorf("Client write: %s", err.Error()))
+			logger.NewError(fmt.Errorf("client write error: %s", err.Error()))
 			return
 		}
 	}

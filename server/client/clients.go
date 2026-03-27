@@ -13,7 +13,7 @@ type Client struct {
 }
 
 var (
-	Clients   = make(map[string]map[string]*Client) // map[group]map[uuid]conn
+	Clients   = make(map[string]map[string]*Client)
 	ClientsMu = sync.Mutex{}
 )
 

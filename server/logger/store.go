@@ -29,7 +29,7 @@ func store(t logType, now, message string) {
 	logs := make(map[string]Log)
 	data, err := os.ReadFile(config.LogPATH)
 	if err != nil {
-		NewError(fmt.Errorf("Log store: %s", err.Error()))
+		NewError(fmt.Errorf("log stored error: %s", err.Error()))
 		return
 	}
 
@@ -41,13 +41,13 @@ func store(t logType, now, message string) {
 
 	data, err = json.Marshal(logs)
 	if err != nil {
-		NewError(fmt.Errorf("Log marshal: %s", err.Error()))
+		NewError(fmt.Errorf("log marshal error: %s", err.Error()))
 		return
 	}
 
 	err = os.WriteFile(config.LogPATH, data, 0644)
 	if err != nil {
-		NewError(fmt.Errorf("Log write: %s", err.Error()))
+		NewError(fmt.Errorf("log write: %s", err.Error()))
 		return
 	}
 }
