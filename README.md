@@ -52,7 +52,7 @@ The client handles:
 ```
 +------------+--------+--------+
 | Body Size  | Type   | Body   |
-| 1 byte     | 1 byte | N byte |
+| 2 byte     | 1 byte | N byte |
 +------------+--------+--------+
 ```
 **Data Types:**
